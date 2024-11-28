@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BudgetBuddy - Expense Tracker</title>
+  <style>
+    /* Basic styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #e8f5ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: auto;
+    }
+    .main-container {
+      width: 90%;
+      max-width: 800px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px;
+    }
+    .header {
+      background-color: #4caf50;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      border-radius: 10px 10px 0 0;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+    .header p {
+      margin: 5px 0 0;
+      font-size: 1rem;
+    }
+    .greeting {
+      text-align: center;
+      margin: 10px 0;
+      font-size: 1.5rem;
+    }
+    .content {
+      padding: 20px;
+      text-align: center;
+    }
+    h2 {
+      color: #4caf50;
+      margin-bottom: 15px;
+    }
+    .form-section,
+    .list-section,
+    .summary-section,
+    .category-limit-section {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      text-align: left;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #expense-list {
+      list-style: none;
+      padding: 0;
+    }
+    #expense-list li {
+      background-color: #f9f9f9;
+      margin-bottom: 10px;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    #total-expense {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #4caf50;
+    }
+    .notification {
+      color: red;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <header class="header">
+      <h1>BudgetBuddy</h1>
+      <p>Your simple expense tracker</p>
+    </header>
+
+    <div id="greeting" class="greeting"></div>
+
+    <main class="content">
+      <section class="form-section">
+        <h2>Add Expense</h2>
+        <form id="expense-form">
+          <div class="form-group">
+            <label for="expense-name">Expense Name:</label>
+            <input type="text" id="expense-name" placeholder="Enter expense name" required>
+          </div>
+          <div class="form-group">
+            <label for="expense-amount">Amount (₹):</label>
+            <input type="number" id="expense-amount" placeholder="Enter amount" required>
+          </div>
+          <div class="form-group">
+            <label for="expense-category">Category:</label>
+            <select id="expense-category" required>
+              <option value="" disabled selected>Select category</option>
+              <option value="Food & Dining">Food & Dining</option>
+              <option value="Fuel">Fuel</option>
+              <option value="Movies/Concerts/Events">Movies/Concerts/Events</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Personal Care">Personal Care</option>
+              <option value="Socializing">Socializing</option>
+              <option value="Travel & Leisure">Travel & Leisure</option>
+              <option value="Health & Medical">Health & Medical</option>
+              <option value="Education & Learning">Education & Learning</option>
+              <option value="Miscellaneous">Miscellaneous</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="expense-date">Date:</label>
+            <input type="date" id="expense-date" required>
+          </div>
+          <button type="submit">Add Expense</button>
+        </form>
+      </section>
+
+      <section class="list-section">
+        <h2>Expense List</h2>
+        <ul id="expense-list"></ul>
+        <p id="notification" class="notification"></p>
+      </section>
+
+      <section class="summary-section">
+        <h2>Total Expense</h2>
+        <p id="total-expense">₹0.00</p>
+      </section>
+
+      <section class="category-limit-section">
+        <h2>Set Category Limits</h2>
+        <label for="category-select">Select Category:</label>
+        <select id="category-select">
+          <option value="" disabled selected>Select category</option>
+          <option value="Food & Dining">Food & Dining</option>
+          <option value="Fuel">Fuel</option>
+          <option value="Movies/Concerts/Events">Movies/Concerts/Events</option>
+          <option value="Shopping">Shopping</option>
+          <option value="Personal Care">Personal Care</option>
+          <option value="Socializing">Socializing</option>
+          <option value="Travel & Leisure">Travel & Leisure</option>
+          <option value="Health & Medical">Health & Medical</option>
+          <option value="Education & Learning">Education & Learning</option>
+          <option value="Miscellaneous">Miscellaneous</option>
+        </select>
+        <label for="category-limit-amount">Set Limit (₹):</label>
+        <input type="number" id="category-limit-amount" placeholder="Enter limit" min="0">
+        <button id="set-limit-button">Set Limit</button>
+      </section>
+    </main>
+  </div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const expenseForm = document.getElementById("expense-form");
+  const expenseList = document.getElementById("expense-list");
+  const totalExpense = document.getElementById("total-expense");
+  const notification = document.getElementById("notification");
+
+  let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+  let categoryLimits = JSON.parse(localStorage.getItem("categoryLimits")) || {};
+
+  function greetUser() {
+    const hours = new Date().getHours();
+    let greeting = "Welcome";
+    if (hours < 12) {
+      greeting = "Good Morning";
+    } else if (hours < 18) {
+      greeting = "Good Afternoon";
+    } else {
+      greeting = "Good Evening";
+    }
+    notification.textContent = ${greeting}! Start managing your expenses.;
+  }
+
+  expenseForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = document.getElementById("expense-name").value;
+    const amount = parseFloat(document.getElementById("expense-amount").value);
+    const category = document.getElementById("expense-category").value;
+    const date = document.getElementById("expense-date").value;
+
+    if (name && !isNaN(amount) && category && date) {
+      expenses.push({ name, amount, category, date });
+      localStorage.setItem("expenses", JSON.stringify(expenses));
+
+      displayExpenses();
+      calculateTotalExpense();
+
+      // Check if the added expense exceeds the category limit
+      const categoryTotal = expenses
+        .filter(exp => exp.category === category)
+        .reduce((sum, exp) => sum + exp.amount, 0);
+
+      if (categoryLimits[category] && categoryTotal > categoryLimits[category]) {
+        notification.textContent = Warning: ${category} exceeded the limit of ₹${categoryLimits[category]};
+      } else {
+        notification.textContent = "";
+      }
+
+      expenseForm.reset();
+    } else {
+      notification.textContent = "Please fill out all fields.";
+    }
+  });
+
+  document.getElementById("set-limit-button").addEventListener("click", () => {
+    const category = document.getElementById("category-select").value;
+    const limit = parseFloat(document.getElementById("category-limit-amount").value);
+    if (category && !isNaN(limit) && limit > 0) {
+      categoryLimits[category] = limit;
+      localStorage.setItem("categoryLimits", JSON.stringify(categoryLimits));
+      notification.textContent = Limit set for ${category}: ₹${limit};
+    }
+  });
+
+  function displayExpenses() {
+    expenseList.innerHTML = expenses
+      .map(
+        (exp, idx) =>
+          <li>${exp.name} - ₹${exp.amount} (${exp.category}) on ${exp.date} <button class="delete-btn" data-index="${idx}">Delete</button></li>
+      )
+      .join("");
+
+    const deleteButtons = document.querySelectorAll(".delete-btn");
+    deleteButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        deleteExpense(parseInt(button.dataset.index, 10));
+      });
+    });
+  }
+
+  function calculateTotalExpense() {
+    const total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+    totalExpense.textContent = ₹${total.toFixed(2)};
+  }
+
+  function deleteExpense(index) {
+    const removedExpense = expenses[index];
+    expenses.splice(index, 1);
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+    displayExpenses();
+    calculateTotalExpense();
+
+    // Check if the category total after deletion exceeds the limit
+    const categoryTotal = expenses
+      .filter(exp => exp.category === removedExpense.category)
+      .reduce((sum, exp) => sum + exp.amount, 0);
+
+    if (categoryLimits[removedExpense.category] && categoryTotal > categoryLimits[removedExpense.category]) {
+      notification.textContent = Warning: ${removedExpense.category} exceeded the limit of ₹${categoryLimits[removedExpense.category]};
+    } else {
+      notification.textContent = "";
+    }
+  }
+
+  displayExpenses();
+  calculateTotalExpense();
+  greetUser();
+});
+</script>
+</body>
+</html>
